@@ -4,7 +4,8 @@ This guide will walkthrough the setup of deploying a Rails application completel
 
 > [!IMPORTANT]
 > This guide assumes you're on macOS whether it's Intel or Apple Silicon.
- Components
+
+# Components
 
 ## Docker
 
