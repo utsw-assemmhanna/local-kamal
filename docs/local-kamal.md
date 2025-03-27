@@ -184,7 +184,7 @@ Since the VM will pull from the registry, it too needs to whitelist our IP.
 - SSH into the VM by running `ssh ubuntu@<VM_IP_ADDRESS>`
 - Create a docker engine config file by running `sudo touch /etc/docker/daemon.json`
 - Using `nano` or `vi`, add the JSON
-```
+```json
 {
   "insecure-registries": [
     "<YOUR_PRIVATE_IP>:5000"
@@ -262,7 +262,6 @@ Let's start with the easy one. Replace `$KAMAL_REGISTRY_PASSWORD` with the passw
 
 Look for the arrows below to see where the changes are expected
 
-
 ```yaml
 # Name of your application. Used to uniquely configure containers.
 service: store
@@ -274,8 +273,8 @@ image: registry/store # <==============================
 servers:
   web:
     - <VM_IP_ADDRESS> # <==============================
-  # job:
   #   hosts:
+    # job:
   #     - 192.168.0.1
   #   cmd: bin/jobs
 
@@ -302,26 +301,6 @@ registry:
 env:
   secret:
     - RAILS_MASTER_KEY
-  #clear:
-    # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
-    # When you start using multiple servers, you should split out job processing to a dedicated machine.
-    # SOLID_QUEUE_IN_PUMA: true
-
-    # Set number of processes dedicated to Solid Queue (default: 1)
-    # JOB_CONCURRENCY: 3
-
-    # Set number of cores available to the application on each server (default: 1).
-    # WEB_CONCURRENCY: 2
-
-    # Match this to any external database server to configure Active Record correctly
-    # Use store-db for a db accessory server on same machine via local kamal docker network.
-    # DB_HOST: 192.168.0.2
-
-    # Log everything from Rails
-    # RAILS_LOG_LEVEL: debug
-
-# Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
-# "bin/kamal logs -r job" will tail logs from the first server in the job section.
 aliases:
   console: app exec --interactive --reuse "bin/rails console"
   shell: app exec --interactive --reuse "bash"
@@ -334,53 +313,14 @@ aliases:
 volumes:
   - "store_storage:/rails/storage"
 
-
-# Bridge fingerprinted assets, like JS and CSS, between versions to avoid
-# hitting 404 on in-flight requests. Combines all files from new and old
-# version inside the asset_path.
-asset_path: /rails/public/assets
-
 # Configure the image builder.
 builder:
   arch: arm64
-
-  # # Build image via remote server (useful for faster amd64 builds on arm64 computers)
-  # remote: ssh://docker@docker-builder-server
-  #
-  # # Pass arguments and secrets to the Docker build process
-  # args:
-  #   RUBY_VERSION: ruby-3.4.2
-  # secrets:
-  #   - GITHUB_TOKEN
-  #   - RAILS_MASTER_KEY
 
 # Use a different ssh user than root
 ssh: # <==============================
   user: ubuntu # <==============================
 
-# Use accessory services (secrets come from .kamal/secrets).
-# accessories:
-#   db:
-#     image: mysql:8.0
-#     host: 192.168.0.2
-#     # Change to 3306 to expose port to the world instead of just local network.
-#     port: "127.0.0.1:3306:3306"
-#     env:
-#       clear:
-#         MYSQL_ROOT_HOST: '%'
-#       secret:
-#         - MYSQL_ROOT_PASSWORD
-#     files:
-#       - config/mysql/production.cnf:/etc/mysql/my.cnf
-#       - db/production.sql:/docker-entrypoint-initdb.d/setup.sql
-#     directories:
-#       - data:/var/lib/mysql
-#   redis:
-#     image: redis:7.0
-#     host: 192.168.0.2
-#     port: 6379
-#     directories:
-#       - data:/data
 ```
 
 ## Deploying with Kamal
