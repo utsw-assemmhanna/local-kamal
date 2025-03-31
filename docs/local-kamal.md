@@ -5,6 +5,14 @@ This guide will walkthrough the setup of deploying a Rails application completel
 > [!IMPORTANT]
 > This guide assumes you're on macOS whether it's Intel or Apple Silicon.
 
+# Tools and Versions
+
+- Ruby => 3.4.2
+- Rails => 8.0.2
+- Docker => 28.0.1
+- OS => macOS (15.3.2) | M4 Chip
+- Shell => ZSH
+
 # Components
 
 ## Docker
